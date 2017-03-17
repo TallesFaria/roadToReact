@@ -39,9 +39,15 @@ class App extends Component {
         this.setSearchTopstories = this.setSearchTopstories.bind(this);
         this.fetchSearchTopstories = this.fetchSearchTopstories.bind(this);
         this.onSearchChange = this.onSearchChange.bind(this);
+        this.onSearchSubmit = this.onSearchSubmit.bind(this);
         this.onDismiss = this.onDismiss.bind(this);
     }
 
+    onSearchSubmit(event) {
+        const { searchTerm } = this.state;
+        this.fetchSearchTopstories(searchTerm);
+        event.preventDefault();
+    }
 
     setSearchTopstories(result) {
         this.setState({ result });
@@ -65,13 +71,13 @@ class App extends Component {
     onDismiss(id) {
         const isNotId = item => item.objectID !== id;
         const updatedHits = this.state.result.hits.filter(isNotId);
-        result: { ...this.state.result, hits: updatedHits }
+        this.setState({
+            result: { ...this.state.result, hits: updatedHits }
+        });
     }
 
     render() {
         const { searchTerm, result } = this.state;
-        
-        if (!result) { return null; }
 
         return (
             <div className="page">
@@ -79,15 +85,18 @@ class App extends Component {
                     <Search
                         value={searchTerm}
                         onChange={this.onSearchChange}
+                        onSubmit={this.onSearchSubmit}
                     >
                         Search
                     </Search>
                 </div>
-                <Table
-                    list={result.hits}
-                    pattern={searchTerm}
-                    onDismiss={this.onDismiss}
-                />
+                {result
+                    ? <Table
+                        list={result.hits}
+                        onDismiss={this.onDismiss}
+                    />
+                    : null
+                }
             </div>
         );
     }
