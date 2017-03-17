@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 
-const DEFAULT_QUERY = 'redux';
+const DEFAULT_QUERY = 'disney';
 const PATH_BASE = 'https://hn.algolia.com/api/v1';
 const PATH_SEARCH = '/search';
 const PARAM_SEARCH = 'query=';
@@ -101,17 +101,26 @@ class App extends Component {
         );
     }
 }
-const Search = ({ value, onChange, children }) =>
-    <form>
-        {children} <input
+const Search = ({
+    value,
+    onChange,
+    onSubmit,
+    children
+}) =>
+    <form onSubmit={onSubmit}>
+        <input
             type="text"
             value={value}
             onChange={onChange}
         />
+        <button type="submit">
+            {children}
+        </button>
     </form>
-const Table = ({ list, pattern, onDismiss }) =>
+    
+const Table = ({ list, onDismiss }) =>
     <div className="table">
-        {list.filter(isSearched(pattern)).map(item =>
+        {list.map(item =>
             <div key={item.objectID} className="table-row">
                 <span style={{ width: '40%' }}>
                     <a href={item.url}>{item.title}</a>
@@ -131,12 +140,13 @@ const Table = ({ list, pattern, onDismiss }) =>
                         className="button-inline"
                     >
                         Dismiss
-</Button>
+                    </Button>
                 </span>
             </div>
         )}
     </div>
-const Button = ({ onClick, className = '', children }) =>
+    
+    const Button = ({ onClick, className = '', children }) =>
     <button
         onClick={onClick}
         className={className}
