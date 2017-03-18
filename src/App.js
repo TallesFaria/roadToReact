@@ -193,3 +193,9 @@ const Button = ({ onClick, className = '', children }) =>
         {children}
     </button>
 export default App;
+
+export {
+    Button,
+    Search,
+    Table,
+};
