@@ -11,9 +11,6 @@ const PARAM_SEARCH = 'query=';
 const PARAM_PAGE = 'page=';
 const PARAM_HPP = 'hitsPerPage=';
 
-const Loading = () =>
-    <div>Loading ...</div>
-
 class App extends Component {
     constructor(props) {
         super(props);
@@ -138,13 +135,13 @@ ${page}&${PARAM_HPP}${DEFAULT_HPP}`)
                     list={list}
                     onDismiss={this.onDismiss}
                 />
-                {isLoading
-                    ? <Loading />
-                    : <Button
+                <div className="interactions">
+                    <ButtonWithLoading
+                        isLoading={isLoading}
                         onClick={() => this.fetchSearchTopstories(searchKey, page + 1)}>
                         More
-                    </Button>
-                }
+                    </ButtonWithLoading>
+                </div>
             </div>
         );
     }
@@ -202,6 +199,16 @@ const Button = ({ onClick, className = '', children }) =>
     >
         {children}
     </button>
+
+const Loading = () =>
+    <div>Loading ...</div>
+
+const withLoading = (Component) => ({ isLoading, ...rest }) =>
+    isLoading ? <Loading /> : <Component { ...rest } />
+
+const ButtonWithLoading = withLoading(Button);
+
+
 export default App;
 
 export {
